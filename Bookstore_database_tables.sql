@@ -43,23 +43,16 @@ INSERT INTO Publisher (PubName) VALUES ('Simon & Schuster');
 
 CREATE TABLE State
 (
-  StateID INT NOT NULL,
-  State INT NOT NULL,
+  StateID INT NOT NULL AUTO_INCREMENT,
+  State varchar(45) NOT NULL,
   PRIMARY KEY (StateID)
 );
 
 CREATE TABLE City
 (
-  CityID INT NOT NULL,
-  City INT NOT NULL,
+  CityID INT NOT NULL AUTO_INCREMENT,
+  City varchar(45) NOT NULL,
   PRIMARY KEY (CityID)
-);
-
-CREATE TABLE AddressType
-(
-  AdressTypeID INT NOT NULL,
-  AddressTypeName INT NOT NULL,
-  PRIMARY KEY (AdressTypeID)
 );
 
 CREATE TABLE Zip
@@ -76,10 +69,26 @@ CREATE TABLE City_Zip
   FOREIGN KEY (ZipFK) REFERENCES Zip(ZipID)
 );
 
+CREATE TABLE AddressType
+(
+  AdressTypeID INT NOT NULL AUTO_INCREMENT,
+  AddressTypeName varchar(30) NOT NULL,
+  PRIMARY KEY (AdressTypeID)
+);
+
+CREATE TABLE Address_AddressType
+(
+  AddressFK INT NOT NULL,
+  AddressTypeFK INT NOT NULL,
+  FOREIGN KEY (AddressFK) REFERENCES Address(AddressID),
+  FOREIGN KEY (AddressTypeFK) REFERENCES AddressType(AdressTypeID)
+);
+
+
 CREATE TABLE Address
 (
-  AddressID INT NOT NULL,
-  Street INT NOT NULL,
+  AddressID INT NOT NULL AUTO_INCREMENT,
+  Street varchar(60) NOT NULL,
   CityFK INT NOT NULL,
   StateFK INT NOT NULL,
   PRIMARY KEY (AddressID),
@@ -95,10 +104,18 @@ CREATE TABLE Customer_Address
   FOREIGN KEY (AddressFK) REFERENCES Address(AddressID)
 );
 
-CREATE TABLE Address_AddressType
-(
-  AddressFK INT NOT NULL,
-  AddressTypeFK INT NOT NULL,
-  FOREIGN KEY (AddressFK) REFERENCES Address(AddressID),
-  FOREIGN KEY (AddressTypeFK) REFERENCES AddressType(AdressTypeID)
-);
+INSERT INTO State (State) VALUES ('NY'), ('NJ');
+
+INSERT INTO City (City) VALUES ('Alfred'), ('Hornell');
+
+INSERT INTO Zip (ZipID) VALUES (14820), (14843);
+
+INSERT INTO City_Zip (CityFK, ZipFK) VALUES (1, 1), (2, 2);
+
+INSERT INTO AddressType (AddressTypeName) VALUES ('Shipping'), ('Billing');
+
+INSERT INTO Address_AddressType (AddressFK, AddressTypeFK) VALUES (1, 1), (1, 2);
+
+INSERT INTO Address (Street, CityFK, StateFK) VALUES ('2382 Main St.', 1, 1), ('2392 The Rd.', 2, 1);
+
+INSERT INTO Customer_Address (CustomerFK, AddressFK) VALUES (1, 1), (2, 2);
